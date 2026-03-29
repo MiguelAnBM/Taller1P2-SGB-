@@ -9,9 +9,9 @@ public class SistemaBancarioException extends Exception {
     private LocalDateTime timestamp;
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
-    public SistemaBancarioException(String codigoError, LocalDateTime timestamp) {
+    public SistemaBancarioException(String message, String codigoError, LocalDateTime timestamp) {
 
-        super();
+        super(message);
         this.codigoError = codigoError;
         this.timestamp = timestamp;
     }
@@ -21,8 +21,13 @@ public class SistemaBancarioException extends Exception {
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
-    public String getCodigoError() { return codigoError; }
-    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getCodigoError() {
+        return codigoError;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
     @Override

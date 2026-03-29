@@ -27,7 +27,8 @@ public abstract class Cuenta {
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
-    public String numeroCuenta() { return numeroCuenta; }
+    public String getNumeroCuenta() { return numeroCuenta; }
+    public double getSaldo(){return saldo;}
     public boolean getBloqueada() { return bloqueada; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public LocalDateTime getUltimaModificacion() { return ultimaModificacion; }

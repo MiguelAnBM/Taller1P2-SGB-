@@ -1,21 +1,11 @@
-<<<<<<< Updated upstream
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Administrator/Downloads/Taller1P2-SGB--main/Taller1P2-SGB--main/SistemaBancario/src/modelo/excepciones/ModeloExcepciones.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Taller1P2-SGB--main/Taller1P2-SGB--main/SistemaBancario/src/modelo/banco/Banco.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Taller1P2-SGB--main/Taller1P2-SGB--main/SistemaBancario/src/modelo/cuentas/CuentaCorriente.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Taller1P2-SGB--main/Taller1P2-SGB--main/SistemaBancario/src/modelo/cuentas/CuentaAhorros.java</file>
         </group>
     </open-files>
 </project-private>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/maygu/Downloads/Trabajos%20Universidad/3S/Programacion%20II/Taller1P2-SGB-/SistemaBancario/src/modelo/excepciones/CapacidadExcedidaException.java</file>
-        </group>
-    </open-files>
-</project-private>
->>>>>>> Stashed changes

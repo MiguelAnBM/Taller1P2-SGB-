@@ -8,12 +8,14 @@ public class ClienteNoEncontradoException extends SistemaBancarioException {
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public ClienteNoEncontradoException(String idCliente) {
 
-        super("[Error] Cliente no encontrado. No existe ningun cliente registrado con el ID: " + idCliente);
+        super("ERROR: Cliente no encontrado. No existe ningun cliente registrado con el ID: " + idCliente);
         this.idCliente = idCliente;
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
-    public String getIdCliente() { return idCliente; }
+    public String getIdCliente() {
+        return idCliente;
+    }
 
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
     @Override

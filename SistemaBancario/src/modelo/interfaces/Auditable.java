@@ -1,13 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.interfaces;
 
-/**
- *
- * @author maygu
- */
+import java.time.LocalDateTime;
+
 public interface Auditable {
-    
+
+    // ── MÉTODOS ABSTRACTOS ───────────────────────────────────────────────────────
+    LocalDateTime obtenerFechaCreacion();
+    LocalDateTime obtenerUltimaModificacion();
+    String obtenerUsuarioModificacion();
+    void registrarModificacion(String usuario);
 }

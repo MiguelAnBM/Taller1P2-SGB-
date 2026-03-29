@@ -4,7 +4,7 @@ public class PermisoInsuficienteException extends BancoRuntimeException {
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public PermisoInsuficienteException() {
-        super("[Error] El usuario no tiene los permisos suficientes para realizar la operacion");
+        super("ERROR: El usuario no tiene los permisos suficientes para realizar la operacion");
     }
 
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────

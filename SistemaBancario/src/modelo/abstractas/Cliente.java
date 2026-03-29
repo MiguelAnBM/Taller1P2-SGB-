@@ -49,7 +49,7 @@ public abstract class Cliente extends Persona {
     
     protected void setUsuarioModificacion(String usuarioModificacion) {
         if (usuarioModificacion == null || usuarioModificacion.isBlank()) {
-            throw new DatoInvalidoException("usuarioModificacion", null);
+            throw new DatoInvalidoException();
         }
         this.usuarioModificacion = usuarioModificacion;
         this.ultimaModificacion  = LocalDateTime.now();
@@ -58,10 +58,10 @@ public abstract class Cliente extends Persona {
     // ── MÉTODOS CONCRETOS ───────────────────────────────────────────────────────
     public void agregarCuenta(Cuenta cuenta) throws CapacidadExcedidaException {
         if (cuenta == null) {
-            throw new DatoInvalidoException("Cuenta", null);
+            throw new DatoInvalidoException();
         }
         if (totalCuentas >= maxCuentas) {
-            throw new CapacidadExcedidaException(maxCuentas);
+            throw new CapacidadExcedidaException();
         }
         cuentas[totalCuentas] = cuenta;
         totalCuentas++;

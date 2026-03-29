@@ -1,13 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
-public class DatoInvalidoException extends BancoRuntimeException{
-    
+public class DatoInvalidoException extends BancoRuntimeException {
+
+    // ── ATRIBUTOS ───────────────────────────────────────────────────────
+    private String campo;
+    private Object valorRecibido;
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public DatoInvalidoException(String campo, Object valorRecibido, String message) {
+        super("ERROR: Dato invalido en el campo: " + campo + "se ha recibido: " + valorRecibido);
+        this.campo = campo;
+        this.valorRecibido = valorRecibido;
+    }
+
+    // ── GETTERS ───────────────────────────────────────────────────────
+    public String getCampo() {
+        return campo;
+    }
+
+    public Object getValorRecibido() {
+        return valorRecibido;
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return "Campo: " + campo + ""
+                + "Dato recibido: " + valorRecibido;
+    }
+
 }

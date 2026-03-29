@@ -1,13 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
+import java.time.LocalDateTime;
+
 public class SistemaBancarioException extends Exception {
-    
+
+    // ── ATRIBUTOS ───────────────────────────────────────────────────────
+    private String codigoError;
+    private LocalDateTime timestamp;
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public SistemaBancarioException(String codigoError, LocalDateTime timestamp) {
+
+        super();
+        this.codigoError = codigoError;
+        this.timestamp = timestamp;
+    }
+
+    public SistemaBancarioException(String message) {
+        super(message);
+    }
+
+    // ── GETTERS ───────────────────────────────────────────────────────
+    public String getCodigoError() {
+        return codigoError;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return " Mensaje: " + getMessage() + ""
+                + " CodigoError: " + getCodigoError() + ""
+                + " Timestamp: " + getTimestamp();
+    }
+
 }

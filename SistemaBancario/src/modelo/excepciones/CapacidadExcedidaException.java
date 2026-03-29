@@ -1,13 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
-public class CapacidadExcedidaException extends SistemaBancarioException{
-    
+public class CapacidadExcedidaException extends SistemaBancarioException {
+
+    // ── ATRIBUTOS ───────────────────────────────────────────────────────
+    private int capacidadMaxima;
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public CapacidadExcedidaException(int capacidadMaxima) {
+
+        super("ERROR: Ha superado la capacidad maxima de: " + capacidadMaxima);
+        this.capacidadMaxima = capacidadMaxima;
+    }
+
+    // ── GETTERS ───────────────────────────────────────────────────────
+    public int getCapacidadMaxima() {
+        return capacidadMaxima;
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return super.toString() + "Capacidad maxima: " + capacidadMaxima;
+    }
+
 }

@@ -1,13 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
-public class SaldoInsuficienteException extends SistemaBancarioException{
-    
+public class SaldoInsuficienteException extends SistemaBancarioException {
+
+    // ── ATRIBUTOS ───────────────────────────────────────────────────────
+    private double saldoActual, montoSolicitado;
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public SaldoInsuficienteException(double saldoActual, double montoSolicitado) {
+
+        super("ERROR: Saldo insuficiente. Tiene disponible: " + saldoActual + "pero solicita: " + montoSolicitado);
+        this.saldoActual = saldoActual;
+        this.montoSolicitado = montoSolicitado;
+    }
+
+    // ── GETTERS ───────────────────────────────────────────────────────
+    public double getSaldoActual() {
+        return saldoActual;
+    }
+
+    public double getMontoSolicitado() {
+        return montoSolicitado;
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return super.toString() + "Saldo actual: " + saldoActual + "Monto solicitado: " + montoSolicitado;
+    }
+
 }

@@ -1,13 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
-public class PermisoInsuficienteException extends BancoRuntimeException{
-    
+public class PermisoInsuficienteException extends BancoRuntimeException {
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public PermisoInsuficienteException() {
+        super("ERROR: El usuario no tiene los permisos suficientes para realizar la operacion");
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
 }

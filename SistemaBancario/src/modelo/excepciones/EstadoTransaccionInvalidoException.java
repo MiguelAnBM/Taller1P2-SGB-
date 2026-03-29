@@ -1,13 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.excepciones;
 
-/**
- *
- * @author maygu
- */
-public class EstadoTransaccionInvalidoException extends BancoRuntimeException{
-    
+public class EstadoTransaccionInvalidoException extends BancoRuntimeException {
+
+    // ── ATRIBUTOS ───────────────────────────────────────────────────────
+    private String estadoInicial;
+    private String estadoFinal;
+
+    // ── CONSTRUCTOR ───────────────────────────────────────────────────────
+    public EstadoTransaccionInvalidoException(String estadoInicial, String estadoFinal) {
+        super("ERROR: Estado de transaccion invalido. No se puede pasar de: " + estadoInicial + " a " + estadoFinal);
+        this.estadoInicial = estadoInicial;
+        this.estadoFinal = estadoFinal;
+    }
+
+    // ── GETTERS ───────────────────────────────────────────────────────
+    public String getEstadoInicial() {
+        return estadoInicial;
+    }
+
+    public String getEstadoFinal() {
+        return estadoFinal;
+    }
+
+    // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
+    @Override
+    public String toString() {
+        return "EstadoTransaccionInvalidoException" + ""
+                + "Estado inicial: " + estadoInicial + " "
+                + " Estado final: " + estadoFinal;
+
+    }
+
 }

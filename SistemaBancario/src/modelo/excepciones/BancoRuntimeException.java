@@ -10,7 +10,7 @@ public class BancoRuntimeException extends RuntimeException {
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
     @Override
     public String toString() {
-        return "mensaje: " + getMessage();
+        return "Mensaje: " + getMessage();
     }
 
 }

@@ -57,9 +57,7 @@ public class Banco {
     }
     
     public void registrarEmpleado(Empleado e){
-        for (int i = 0; i < 50; i++) {
-            empleados[i].
-        }
+
     }
     
     public void abrirCuenta(String idCliente, Cuenta c){
@@ -75,7 +73,7 @@ public class Banco {
         }
         
         if (clienteLocalizado == null) {
-            throw new ClienteNoEncontradoException();
+            throw new ClienteNoEncontradoException(id);
         }
         
         return clienteLocalizado;

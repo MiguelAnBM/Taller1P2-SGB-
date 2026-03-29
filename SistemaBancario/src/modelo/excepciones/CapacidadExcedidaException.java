@@ -8,14 +8,12 @@ public class CapacidadExcedidaException extends SistemaBancarioException {
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public CapacidadExcedidaException(int capacidadMaxima) {
 
-        super("ERROR: Ha superado la capacidad maxima de: " + capacidadMaxima);
+        super("[Error] Ha superado la capacidad maxima de: " + capacidadMaxima);
         this.capacidadMaxima = capacidadMaxima;
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
-    public int getCapacidadMaxima() {
-        return capacidadMaxima;
-    }
+    public int getCapacidadMaxima() { return capacidadMaxima; }
 
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
     @Override

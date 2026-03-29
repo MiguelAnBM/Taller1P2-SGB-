@@ -7,20 +7,15 @@ public class DatoInvalidoException extends BancoRuntimeException {
     private Object valorRecibido;
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
-    public DatoInvalidoException(String campo, Object valorRecibido, String message) {
-        super("ERROR: Dato invalido en el campo: " + campo + "se ha recibido: " + valorRecibido);
+    public DatoInvalidoException(String campo, Object valorRecibido) {
+        super("[Error] Dato invalido en el campo: " + campo + "se ha recibido: " + valorRecibido);
         this.campo = campo;
         this.valorRecibido = valorRecibido;
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
-    public String getCampo() {
-        return campo;
-    }
-
-    public Object getValorRecibido() {
-        return valorRecibido;
-    }
+    public String getCampo() { return campo; }
+    public Object getValorRecibido() { return valorRecibido; }
 
     // ── MÉTODO SOBREESCRITO ───────────────────────────────────────────────────────
     @Override

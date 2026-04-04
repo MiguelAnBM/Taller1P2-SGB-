@@ -19,10 +19,10 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public CuentaAhorros(String numeroCuenta, double saldo, String usuarioModificacion,
-                         double tasaInteres, int retirosMesActual, int maxRetirosMes) {
+                         double tasaInteres, int maxRetirosMes) {
         super(numeroCuenta, saldo, usuarioModificacion);
         this.tasaInteres = tasaInteres;
-        this.retirosMesActual = retirosMesActual;
+        this.retirosMesActual = 0;
         this.maxRetirosMes = maxRetirosMes;
     }
 
@@ -34,10 +34,6 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setTasaInteres(double tasaInteres) {
         this.tasaInteres = tasaInteres;
-    }
-
-    public void setRetirosMesActual(int retirosMesActual) {
-        this.retirosMesActual = retirosMesActual;
     }
 
     public void setMaxRetirosmes(int maxRetirosMes) {
@@ -53,8 +49,7 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public double getLimiteRetiro() {
-        //Falta por colocar
-        return 0;
+        return getSaldo();
     }
 
     @Override
@@ -65,15 +60,14 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
     // ── MÉTODOS DE INTERFACES ───────────────────────────────────────────────────────
    
     //MÉTODOS DE CONSULTABLE
-    
     @Override
     public String obtenerResumen() {
-        return "CUENTA DE AHORROS"+
-                "Numero de cuenta: " + getNumeroCuenta() +
-                "Saldo" + getSaldo() + 
-                "Tasa de interes"+ getTasaInteres()+
-                "Retiros realizados este mes: " + getRetirosMesActual() + 
-                "Maximo de retiros posibles: " + getMaxRetirosMes(); 
+        return "CUENTA DE AHORROS ---------------------" + "\n"
+             + "Numero de cuenta: " + getNumeroCuenta() + "\n"
+             + "Saldo: " + getSaldo() + "\n"
+             + "Tasa de interes: "+ getTasaInteres() + "\n"
+             + "Retiros realizados este mes: " + getRetirosMesActual() + "\n"
+             + "Maximo de retiros posibles: " + getMaxRetirosMes(); 
     }
 
     @Override
@@ -86,27 +80,25 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
         return "Cuenta de ahorros";}
 
     //MÉTODOS DE TRANSACCIONABLE
-    
     @Override
     public void depositar(double monto) throws CuentaBloqueadaException{
-         verificarBloqueada();
-        if (monto<=0) {
+        verificarBloqueada();
+        if (monto <= 0) {
             throw new DatoInvalidoException("Depositar", monto);
-            }
-        saldo+=monto; 
+        }
+        saldo += monto; 
     }
 
     @Override
     public void retirar(double monto) throws SaldoInsuficienteException, CuentaBloqueadaException{
-            verificarBloqueada();
-        if (monto <=0) {
-            throw new SaldoInsuficienteException(saldo, monto);
-        } if (monto>getLimiteRetiro()) {
-            throw new SaldoInsuficienteException(saldo, monto);
+        verificarBloqueada();
+        if (monto <= 0) {
+            throw new DatoInvalidoException("Retirar", monto);
+        } if (monto > getLimiteRetiro()) {
+            throw new SaldoInsuficienteException(getSaldo(), monto);
         }
-        saldo-=monto;
+        saldo -= monto;
         retirosMesActual++;
-       
     }
 
     @Override
@@ -117,11 +109,10 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public double consultarSaldo() {
-    return saldo;
+        return getSaldo();
     }
 
     //MÉTODOS DE AUDITABLE
-    
     @Override
     public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion(); 

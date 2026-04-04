@@ -28,14 +28,14 @@ public class ClienteNatural extends Cliente {
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setTipoDocumento(TipoDocumento tipoDocumento) {
         if (tipoDocumento == null) {
-            throw new DatoInvalidoException("TipoDocumento", null);
+            throw new DatoInvalidoException("TipoDocumento", "Vacio");
         }
         this.tipoDocumento = tipoDocumento;
     }
 
     public void setNumeroDocumento(String numeroDocumento) {
         if (numeroDocumento == null || numeroDocumento.isEmpty()) {
-            throw new DatoInvalidoException("NumeroDocumento", null);
+            throw new DatoInvalidoException("NumeroDocumento", "Vacio");
         }
         this.numeroDocumento = numeroDocumento;
     }

@@ -20,8 +20,7 @@ public class Transaccion {
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public Transaccion(String id, Cuenta cuentaOrigen, Cuenta cuentaDestino,
-            double monto, EstadoTransaccion estado, LocalDateTime fecha,
-            String descripcion) {
+            double monto, EstadoTransaccion estado, String descripcion) {
         setId(id);
         setCuentaOrigen(cuentaOrigen);
         setCuentaDestino(cuentaDestino);

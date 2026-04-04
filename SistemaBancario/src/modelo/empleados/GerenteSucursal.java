@@ -24,7 +24,7 @@ public class GerenteSucursal extends Empleado{
                 fechaContratacion, salarioBase);
         setSucursal(sucursal);
         setPresupuestoAnual(presupuestoAnual);
-        this.empleadosACargo = new Empleado[20];
+        this.empleadosACargo = new Empleado[30];
     }
     
     // ── GETTERS ───────────────────────────────────────────────────────

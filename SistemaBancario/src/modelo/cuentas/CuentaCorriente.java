@@ -31,15 +31,15 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setMontoSobregiro(double montoSobregiro) {
-        if (montoSobregiro<0) {
-            throw new DatoInvalidoException("Monto Sobregiro", saldo);     
+        if (montoSobregiro < 0) {
+            throw new DatoInvalidoException("Monto Sobregiro", montoSobregiro);     
         }
         this.montoSobregiro = montoSobregiro;
     }
 
     public void setComisionMantenimiento(double comisionMantenimiento) {
-        if (comisionMantenimiento<0) {
-            throw new DatoInvalidoException("Comision de mantenimiento", saldo);
+        if (comisionMantenimiento < 0) {
+            throw new DatoInvalidoException("Comision de mantenimiento", comisionMantenimiento);
         }
         this.comisionMantenimiento = comisionMantenimiento;
     }
@@ -52,13 +52,13 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
 
     @Override //Aún no ha sido aplicado
     public double getLimiteRetiro() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getSaldo() + getMontoSobregiro();
     }
 
     @Override
     public String getTipoCuenta() {
-    return TipoCuenta.CORRIENTE.toString();
-        }
+        return TipoCuenta.CORRIENTE.toString();
+    }
 
     // ── MÉTODOS DE INTERFACES ───────────────────────────────────────────────────────
    
@@ -66,10 +66,10 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     
     @Override
     public String obtenerResumen() {
-    return "CUENTA CORRIENTE"
-            + "Numero de cuenta : "+ getNumeroCuenta()
-            + "Saldo: "+ getSaldo()
-            + "Monto sobregiro: " + getMontoSobregiro();}
+    return "CUENTA CORRIENTE ----------------------" + "\n"
+         + "Numero de cuenta : " + getNumeroCuenta() + "\n"
+         + "Saldo: $" + getSaldo() + "\n"
+         + "Monto sobregiro: $" + getMontoSobregiro();}
 
     @Override
     public boolean estaActivo() {
@@ -84,10 +84,10 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     @Override
     public void depositar(double monto) throws CuentaBloqueadaException{
         verificarBloqueada();
-        if (monto<=0) {
+        if (monto <= 0) {
             throw new DatoInvalidoException("Depositar", monto);
             }
-        saldo+=monto;
+        saldo += monto;
     }
 
     //MÉTODOS DE TRANSACCIONABLE
@@ -95,13 +95,12 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     @Override
     public void retirar(double monto) throws SaldoInsuficienteException, CuentaBloqueadaException {
         verificarBloqueada();
-        if (monto <=0) {
-            throw new SaldoInsuficienteException(saldo, montoSobregiro);
-        } if (monto>getLimiteRetiro()) {
-            throw new SaldoInsuficienteException(saldo, montoSobregiro);
+        if (monto <= 0) {
+            throw new SaldoInsuficienteException(getSaldo(), montoSobregiro);
+        } if (monto > getLimiteRetiro()) {
+            throw new SaldoInsuficienteException(getSaldo(), montoSobregiro);
         }
-        saldo-=monto;
-        
+        saldo -= monto;
     }
 
     @Override
@@ -111,11 +110,10 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
 
     @Override
     public double consultarSaldo() {
-        return saldo;
+        return getSaldo();
     }
 
     //MÉTODOS DE AUDITABLE
-    
     @Override
     public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion();

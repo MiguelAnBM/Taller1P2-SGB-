@@ -4,6 +4,7 @@ package modelo.banco;
 import modelo.abstractas.Cliente;
 import modelo.abstractas.Cuenta;
 import modelo.abstractas.Empleado;
+import modelo.excepciones.CapacidadExcedidaException;
 import modelo.excepciones.ClienteNoEncontradoException;
 import modelo.excepciones.DatoInvalidoException;
 
@@ -12,8 +13,11 @@ public class Banco {
     // ── ATRIBUTOS ───────────────────────────────────────────────────────
     private String nombre;
     private Empleado[] empleados;
+    private int empleadosActual = 0; // Contador para índices de array
     private Cliente[] clientes;
+    private int clientesActual = 0; // Contador para índices de array
     private Cuenta[] cuentas;
+    private int cuentasActual = 0; // Contador para índices de array
     
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public Banco(String nombre){
@@ -53,16 +57,43 @@ public class Banco {
     }
     
     // ── MÉTODOS ───────────────────────────────────────────────────────
-    public void registrarCliente(Cliente c){
-        // FALTA CÓDIGO
+    public void registrarCliente(Cliente c) throws CapacidadExcedidaException {
+        if (clientesActual >= clientes.length){
+            throw new CapacidadExcedidaException(200);
+        }
+        
+        for (int i = 0; i < clientesActual; i++) {
+            if (clientes[i].getId().equals(c.getId())) {
+                throw new DatoInvalidoException("Registrar Cliente", "ID ya existente");
+            }
+        }
+
+        clientes[clientesActual] = c;
+        clientesActual++;
     }
     
-    public void registrarEmpleado(Empleado e){
-        // FALTA CÓDIGO
+    public void registrarEmpleado(Empleado e) throws CapacidadExcedidaException {
+        if (empleadosActual >= empleados.length){
+            throw new CapacidadExcedidaException(50);
+        }
+        
+        for (int i = 0; i < empleadosActual; i++) {
+            if (empleados[i].getId().equals(e.getId())) {
+                throw new DatoInvalidoException("Registrar Empleado", "ID ya existente");
+            }
+        }
+
+        empleados[empleadosActual] = e;
+        empleadosActual++;
     }
     
     public void abrirCuenta(String idCliente, Cuenta c){
-        
+        try {
+            Cliente clienteLocalizado = buscarCliente(idCliente);
+            clienteLocalizado.agregarCuenta(c);
+        } catch (ClienteNoEncontradoException | CapacidadExcedidaException e) {
+            e.getMessage();
+        }
     }
     
     public Cliente buscarCliente(String id) throws ClienteNoEncontradoException{
@@ -86,8 +117,8 @@ public class Banco {
     
     public double calcularNominaTotal(){
         double nominaTotal = 0;
-        for (Empleado empleado : empleados) {
-            nominaTotal += empleado.calcularSalario(); 
+        for (int i = 0; i < empleadosActual; i++) {
+            nominaTotal += empleados[i].calcularSalario();
         }
         return nominaTotal;
     }

@@ -2,9 +2,12 @@ package modelo.abstractas;
  
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import modelo.excepciones.BancoRuntimeException;
 
 import modelo.excepciones.CapacidadExcedidaException;
+import modelo.excepciones.CuentaBloqueadaException;
 import modelo.excepciones.DatoInvalidoException;
+import modelo.interfaces.Transaccionable;
  
 public abstract class Cliente extends Persona {
  
@@ -64,6 +67,26 @@ public abstract class Cliente extends Persona {
         }
         cuentas[totalCuentas] = cuenta;
         totalCuentas++;
+    }
+    
+    public void depositarACuenta(String idCuenta, double monto) throws CuentaBloqueadaException {
+            Cuenta cuentaADepositar = buscarCuenta(idCuenta);
+            if (cuentaADepositar == null) {
+                throw new BancoRuntimeException("La cuenta a buscar no existe");
+            }
+            cuentaADepositar.depositar(monto);
+    }
+    
+    public Cuenta buscarCuenta(String idCuenta) throws CuentaBloqueadaException {
+        for (int i = 0; i < totalCuentas; i++) {
+            if (cuentas[i].getNumeroCuenta().equals(idCuenta)){
+                if (cuentas[i].isBloqueada()) {
+                    throw new CuentaBloqueadaException();
+                }
+                return cuentas[i];
+            }
+        }
+        return null;
     }
     
 }

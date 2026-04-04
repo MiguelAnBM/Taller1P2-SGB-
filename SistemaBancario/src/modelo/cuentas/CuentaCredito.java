@@ -20,11 +20,11 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────
     public CuentaCredito(String numeroCuenta, double saldo, String usuarioModificacion,
-                         double limiteCredito, double tasaInteres, double deudaActual) {
+                         double limiteCredito, double tasaInteres) {
         super(numeroCuenta, saldo, usuarioModificacion);
         this.limiteCredito = limiteCredito;
         this.tasaInteres = tasaInteres;
-        this.deudaActual = deudaActual;
+        this.deudaActual = 0; // Por defecto en cero
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
@@ -48,12 +48,12 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     // ── MÉTODOS ABSTRACTOS HEREDADOS ───────────────────────────────────────────────────────
     @Override
     public double calcularInteres() {
-        return deudaActual * tasaInteres / 12; 
+        return (deudaActual * tasaInteres) / 12; 
     }
 
     @Override
     public double getLimiteRetiro() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        return getLimiteCredito() - getDeudaActual();
     }
 
     @Override
@@ -64,12 +64,12 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     // ── MÉTODOS DE INTERFACES ───────────────────────────────────────────────────────
     @Override
     public String obtenerResumen() {
-        return "CUENTA CORRIENTE"
-            + "Numero de cuenta : "+ getNumeroCuenta()+""
-            + "Saldo: "+ getSaldo()
-            + "Tasa de interes: " + getTasaInteres()
-            + "Deuda actual: " + getDeudaActual()
-            + "Limite de credito: " + getLimiteRetiro();
+        return "CUENTA CREDITO ------------------------" + "\n"
+             + "Numero de cuenta : " + getNumeroCuenta() + "\n"
+             + "Saldo: $" + getSaldo() + "\n"
+             + "Tasa de interes: " + getTasaInteres() + "\n"
+             + "Deuda actual: $" + getDeudaActual() + "\n"
+             + "Limite de credito: $" + getLimiteRetiro();
     }
 
     @Override
@@ -85,24 +85,24 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     @Override
     public void depositar(double monto) throws CuentaBloqueadaException{
         verificarBloqueada();
-        if (monto<=0) {
+        if (monto <= 0) {
             throw new DatoInvalidoException("Depositar", monto);
             }
-        deudaActual-=monto; 
-        if (deudaActual<0) {
-            deudaActual=0;    
+        deudaActual -= monto; 
+        if (deudaActual < 0) {
+            deudaActual = 0;    
         }
     }
 
     @Override
     public void retirar(double monto) throws SaldoInsuficienteException, CuentaBloqueadaException{
         verificarBloqueada();
-        if (monto <=0) {
+        if (monto <= 0) {
             throw new SaldoInsuficienteException(deudaActual, monto);
-        } if (monto>getLimiteRetiro()) {
+        } if (monto > getLimiteRetiro()) {
             throw new SaldoInsuficienteException(deudaActual, monto);
         }
-        saldo+=monto; 
+        deudaActual += monto;
     }
 
     @Override

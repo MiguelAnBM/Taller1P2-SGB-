@@ -6,12 +6,15 @@ import modelo.banco.Transaccion;
 import modelo.excepciones.CapacidadExcedidaException;
 import modelo.excepciones.CuentaBloqueadaException;
 import modelo.excepciones.DatoInvalidoException;
+import modelo.interfaces.Auditable;
+import modelo.interfaces.Consultable;
+import modelo.interfaces.Transaccionable;
 
-public abstract class Cuenta {
+public abstract class Cuenta implements Transaccionable, Consultable, Auditable{
     
     // ── ATRIBUTOS ───────────────────────────────────────────────────────
     private String numeroCuenta;
-    protected double saldo;
+    protected double saldo; // Protected para que sólo las subclases lo usen
     private boolean bloqueada;
     private final LocalDateTime fechaCreacion; // final porque nunca se modifica
     private LocalDateTime ultimaModificacion;
@@ -25,6 +28,7 @@ public abstract class Cuenta {
         setSaldo(saldo);
         this.fechaCreacion = LocalDateTime.now();
         this.ultimaModificacion = LocalDateTime.now();
+        this.usuarioModificacion = "Sistema"; // Por defecto el sistema crea la cuenta
         this.bloqueada = false; // Por defecto no está bloqueada
         this.historial = new Transaccion [20]; // Max 20 
         this.totalTransacciones = 0; // Inicia en 0
@@ -37,6 +41,7 @@ public abstract class Cuenta {
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public LocalDateTime getUltimaModificacion() { return ultimaModificacion; }
     public String getUsuarioModificacion() { return usuarioModificacion; }
+    public int getTotalTransacciones() { return totalTransacciones; }
 
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setNumeroCuenta(String numeroCuenta) {
@@ -75,9 +80,9 @@ public abstract class Cuenta {
         totalTransacciones++;
     }
 
-    public Transaccion[] getHistorial(Transaccion t) {
+    public Transaccion[] getHistorial() {
         Transaccion[] copia = new Transaccion[20];
-        System.arraycopy(t, 0, copia, 0, 20);
+        System.arraycopy(historial, 0, copia, 0, totalTransacciones);
         return copia;
     }
 

@@ -20,7 +20,7 @@ public class Cajero extends Empleado{
     public Cajero(String id, String nombre, String apellido, 
                     LocalDate fechaNacimiento, String email, String legajo,
                     LocalDate fechaContratacion, double salarioBase, Turno turno,
-                    String sucursalAsignada, int transaccionesDia) {
+                    String sucursalAsignada) {
         
         super(id, nombre, apellido, fechaNacimiento, email, legajo, 
               fechaContratacion, salarioBase);

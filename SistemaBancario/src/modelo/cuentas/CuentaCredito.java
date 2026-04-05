@@ -66,10 +66,10 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     public String obtenerResumen() {
         return "CUENTA CREDITO ------------------------" + "\n"
              + "Numero de cuenta : " + getNumeroCuenta() + "\n"
-             + "Saldo: $" + getSaldo() + "\n"
-             + "Tasa de interes: " + getTasaInteres() + "\n"
-             + "Deuda actual: $" + getDeudaActual() + "\n"
-             + "Limite de credito: $" + getLimiteRetiro();
+             + "Saldo : $" + getSaldo() + "\n"
+             + "Tasa de interes : " + getTasaInteres() + "\n"
+             + "Deuda actual : $" + getDeudaActual() + "\n"
+             + "Limite de credito : $" + getLimiteRetiro();
     }
 
     @Override
@@ -95,12 +95,10 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     }
 
     @Override
-    public void retirar(double monto) throws SaldoInsuficienteException, CuentaBloqueadaException{
+    public void retirar(double monto) throws CuentaBloqueadaException{
         verificarBloqueada();
-        if (monto <= 0) {
-            throw new SaldoInsuficienteException(deudaActual, monto);
-        } if (monto > getLimiteRetiro()) {
-            throw new SaldoInsuficienteException(deudaActual, monto);
+        if (monto > getLimiteRetiro()) {
+            throw new DatoInvalidoException("Retirar", monto);
         }
         deudaActual += monto;
     }

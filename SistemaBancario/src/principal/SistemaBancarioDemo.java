@@ -6,15 +6,26 @@ import java.time.format.DateTimeFormatter;
 
 import modelo.abstractas.Cliente;
 import modelo.abstractas.Cuenta;
+import modelo.abstractas.Empleado;
 import modelo.banco.Banco;
+import modelo.banco.Transaccion;
 import modelo.cuentas.CuentaAhorros;
 import modelo.cuentas.CuentaCorriente;
 import modelo.cuentas.CuentaCredito;
+import modelo.empleados.AsesorFinanciero;
+import modelo.empleados.Cajero;
+import modelo.empleados.GerenteSucursal;
+import modelo.enums.EstadoTransaccion;
 import modelo.enums.TipoDocumento;
+import modelo.enums.Turno;
 import modelo.excepciones.CapacidadExcedidaException;
+import modelo.excepciones.ClienteNoEncontradoException;
 import modelo.excepciones.CuentaBloqueadaException;
+import modelo.excepciones.EstadoTransaccionInvalidoException;
+import modelo.excepciones.PermisoInsuficienteException;
 import modelo.excepciones.SaldoInsuficienteException;
 import modelo.interfaces.Consultable;
+import modelo.interfaces.Notificable;
 import modelo.interfaces.Transaccionable;
 import modelo.personas.ClienteEmpresarial;
 import modelo.personas.ClienteNatural;
@@ -65,21 +76,11 @@ public class SistemaBancarioDemo {
         
         // Todo esto es para corroborar que los clientes fueron creados correctamente
         for (Cliente c : banco.getClientes()) {
-            if (c == null) break;
-            System.out.println("---------------------------------------" + "\n"
-                             + "          Cliente Registrado" + "\n"
-                             + "ID: " + c.getId() + "\n"
-                             + "Cliente: " + c.getNombreCompleto() + "\n"
-                             + "Tipo: " + c.obtenerTipo() + "\n"
-                             + "FechaNac: " + c.getFechaNacimiento() + "\n"
-                             + "Email: " + c.getEmail() + "\n"
-                             + c.obtenerDocumentoIdentidad());
-            
-            if (c instanceof ClienteEmpresarial) {
-                ClienteEmpresarial ce = (ClienteEmpresarial) c;
-                System.out.println("Razon social: " + ce.getRazonSocial());
-                System.out.println("Representante legal: " + ce.getRepresentanteLegal());
+            if (c == null) {
+                break;
             }
+            System.out.println("---------------------------------------");
+            System.out.println(c.obtenerResumen());
         }
         
         System.out.println("---------------------------------------");
@@ -92,10 +93,13 @@ public class SistemaBancarioDemo {
                            =======================================
                                          ESCENARIO 2
                            =======================================""");
-
-        banco.abrirCuenta("CN-001", new CuentaAhorros("CA-001", 5000000, "Sistema", 0.12, 50));
-        banco.abrirCuenta("CN-002", new CuentaCorriente("CC-001", 3000000, "Sistema", 1000000, 25000));
-        banco.abrirCuenta("CE-001", new CuentaCredito("CCR-001", 8000000, "Sistema", 4000000, 0.018));
+        try {
+            banco.abrirCuenta("CN-001", new CuentaAhorros("CA-001", 5000000, "Sistema", 0.12, 50));
+            banco.abrirCuenta("CN-002", new CuentaCorriente("CC-001", 3000000, "Sistema", 1000000, 25000));
+            banco.abrirCuenta("CE-001", new CuentaCredito("CCR-001", 8000000, "Sistema", 4000000, 0.018));
+        } catch (ClienteNoEncontradoException | CapacidadExcedidaException e) {
+            System.out.println(e.getMessage());
+        }
         
         // Todo esto es para corroborar que las cuentas fueron creadas correctamente
         System.out.println("---------------------------------------");
@@ -123,12 +127,13 @@ public class SistemaBancarioDemo {
         // Depósito de 50.000 exitoso
         try {
             System.out.println("---------------------------------------");
-            System.out.println(" Deposito de " + clienteN1.getNombreCompleto() + " ($50.000)");
+            System.out.println(" Deposito de " + clienteN1.getNombreCompleto() + " ($500.000)");
+            System.out.println();
             Cuenta cuenta = clienteN1.buscarCuenta("CA-001");
-            System.out.println("Saldo antes: $" + cuenta.getSaldo());
+            System.out.println("Saldo antes  : $" + cuenta.getSaldo());
             
-            clienteN1.depositarACuenta("CA-001", 50000);
-            System.out.println("Saldo actual: $" + cuenta.getSaldo());
+            clienteN1.depositarACuenta("CA-001", 500000);
+            System.out.println("Saldo actual : $" + cuenta.getSaldo());
         } catch (CuentaBloqueadaException e) {
             System.out.println(e.getMessage());
         }
@@ -142,7 +147,11 @@ public class SistemaBancarioDemo {
             clienteN1.depositarACuenta("CA-001", 25000);
         } catch (CuentaBloqueadaException e) {
             System.out.println(e.getMessage());
-        }
+        } 
+        
+        // Para volver a abrir la cuenta para los próximos escenarios, jeje
+        Cuenta cuentaCN1 = clienteN1.buscarCuenta("CA-001");
+        cuentaCN1.setBloqueada(false);
         
         // ===================================================================
         //  Realizar un retiro exitoso y capturar SaldoInsuficienteException 
@@ -157,11 +166,12 @@ public class SistemaBancarioDemo {
         try {
             System.out.println("---------------------------------------");
             System.out.println("  Retiro de " + clienteN2.getNombreCompleto() + " ($100.000)");
+            System.out.println();
             Cuenta cuenta = clienteN2.buscarCuenta("CC-001");
-            System.out.println("Saldo antes: $" + cuenta.getSaldo());
+            System.out.println("Saldo antes  : $" + cuenta.getSaldo());
             
             cuenta.retirar(100000);
-            System.out.println("Saldo actual: $" + cuenta.getSaldo());
+            System.out.println("Saldo actual : $" + cuenta.getSaldo());
         } catch (SaldoInsuficienteException | CuentaBloqueadaException e) {
             System.out.println(e.getMessage());
         }
@@ -184,6 +194,29 @@ public class SistemaBancarioDemo {
                            =======================================
                                          ESCENARIO 5
                            =======================================""");
+
+        try {
+            Cuenta origen = clienteN1.buscarCuenta("CA-001");
+            Cuenta destino = clienteN2.buscarCuenta("CC-001");
+            double monto = 300000;
+            
+            Transaccion transferencia = new Transaccion( "T-001", origen, destino, 300000,
+                                                        EstadoTransaccion.PENDIENTE, 
+                                                        "Transferencia de 300.000 de Miguel a Delany");
+
+            origen.retirar(monto);
+            destino.depositar(monto);
+
+            transferencia.cambiarEstado(EstadoTransaccion.PROCESANDO);
+            transferencia.cambiarEstado(EstadoTransaccion.COMPLETADA);
+            origen.agregarAlHistorial(transferencia);
+            destino.agregarAlHistorial(transferencia);
+
+            System.out.println(transferencia.generarComprobante());
+
+        } catch (SaldoInsuficienteException | CuentaBloqueadaException | CapacidadExcedidaException e) {
+            System.out.println(e.getMessage());
+        }
         
         // ===================================================================
         //  Recorrer un array Empleado[] con instancias de los 3 tipos e 
@@ -194,6 +227,33 @@ public class SistemaBancarioDemo {
                            =======================================
                                          ESCENARIO 6
                            =======================================""");
+        try {
+            banco.registrarEmpleado(new Cajero("C-001", "Carlos", "Torres", LocalDate.parse("1990-05-10"),
+                                               "torres@banco.com", "LEG-001", LocalDate.parse("2020-01-15"),
+                                               2500000, Turno.MAÑANA, "Sucursal Centro"));
+
+            banco.registrarEmpleado(new AsesorFinanciero("A-001", "Laura", "Gomez", LocalDate.parse("1988-03-22"),
+                                                         "gomez@banco.com", "LEG-002", LocalDate.parse("2018-06-01"),
+                                                         3500000, 500000, 10000000));
+
+            banco.registrarEmpleado(new GerenteSucursal("G-001", "Ricardo", "Perez", LocalDate.parse("1980-11-05"),
+                                                        "perez@banco.com", "LEG-003", LocalDate.parse("2010-03-10"),
+                                                        6000000, "Sucursal Norte", 500000000));  
+        } catch (CapacidadExcedidaException e) {
+            System.out.println(e.getMessage());
+        }
+        
+
+        // Recorrer e imprimir salario de cada uno
+        Empleado[] empleados = banco.getEmpleados();
+        for (int i = 0; i < banco.getTotalEmpleados(); i++) {
+            Empleado e = empleados[i];
+            System.out.println("---------------------------------------");
+            System.out.println("Empleado :  " + e.getNombreCompleto());
+            System.out.println("Tipo     :  " + e.obtenerTipo());
+            System.out.println("Salario  :  $" + e.calcularSalario());
+            System.out.println("Bono     :  $" + e.calcularBono());
+        }
         
         // ===================================================================
         //  Recorrer un array Cuenta[] con los 3 tipos e imprimir el resultado 
@@ -205,6 +265,13 @@ public class SistemaBancarioDemo {
                                          ESCENARIO 7
                            =======================================""");
         
+        Cuenta[] cuentas = banco.getCuentas();
+        for (int i = 0; i < banco.getTotalCuentas(); i++) {
+            Cuenta cuenta = cuentas[i];
+            System.out.println(cuenta.obtenerResumen());
+            System.out.println("Interes Calculado : $" + cuenta.calcularInteres());
+        }
+        
         // ===================================================================
         //  Intentar cambiar el estado de una transacción con una transición 
         //  inválida y capturar EstadoTransaccionInvalidoException
@@ -214,6 +281,23 @@ public class SistemaBancarioDemo {
                            =======================================
                                          ESCENARIO 8
                            =======================================""");
+        try {
+            System.out.println("---------------------------------------");
+            System.out.println(" Captura de error de EstadoTransaccion");
+            
+            Cuenta origen = clienteN1.buscarCuenta("CA-001");
+            Cuenta destino = clienteN2.buscarCuenta("CC-001");
+            
+            Transaccion t = new Transaccion("T-002", origen, destino, 100000,
+                                            EstadoTransaccion.PENDIENTE, "Prueba transicion invalida");
+
+            t.cambiarEstado(EstadoTransaccion.PROCESANDO);
+            t.cambiarEstado(EstadoTransaccion.COMPLETADA);
+            t.cambiarEstado(EstadoTransaccion.PROCESANDO); // <- Error: COMPLETADA no puede volver a PROCESANDO
+
+        } catch (EstadoTransaccionInvalidoException e) {
+            System.out.println(e.getMessage());
+        }
         
         // ===================================================================
         //  Intentar aprobar un crédito desde un Cajero y capturar 
@@ -225,6 +309,22 @@ public class SistemaBancarioDemo {
                                          ESCENARIO 9
                            =======================================""");
         
+        try {
+            System.out.println("---------------------------------------");
+            System.out.println("   Captura de error al AprobarCredito");
+            
+            // Obtener el gerente y el cajero del banco
+            GerenteSucursal gerente = (GerenteSucursal) banco.getEmpleados()[2];
+            Cajero cajero = (Cajero) banco.getEmpleados()[0];
+            CuentaCredito ccr = new CuentaCredito("CCR-002", 7000000, "Sistema", 4000000, 0.018);
+
+            // El cajero intenta aprobar un crédito — solo el gerente puede
+            gerente.aprobarCredito(cajero, ccr);
+
+        } catch (PermisoInsuficienteException e) {
+            System.out.println(e.getMessage());
+        }
+        
         // ===================================================================
         //  Llamar a notificar() en un cliente que acepta notificaciones y 
         //  en uno que no
@@ -234,6 +334,13 @@ public class SistemaBancarioDemo {
                            =======================================
                                          ESCENARIO 10
                            =======================================""");
+        
+        // Cliente que acepta notificaciones (por defecto true)
+        clienteN1.notificar("El deposito de $500.000 fue procesado exitosamente.");
+
+        // Cliente que no acepta notificaciones
+        clienteN2.setAceptaNotificaciones(false);
+        clienteN2.notificar("Su depesito de $300.000 fue procesado exitosamente.");
         
         // ===================================================================
         //  Llamar a registrarModificacion() sobre una cuenta y luego imprimir 
@@ -245,6 +352,13 @@ public class SistemaBancarioDemo {
                                          ESCENARIO 11
                            =======================================""");
         
+        CuentaAhorros cuenta = (CuentaAhorros) clienteN1.buscarCuenta("CA-001");
+        
+        cuenta.registrarModificacion("Asesor Financiero");
+
+        System.out.println("Ultima modificacion: " + cuenta.obtenerUltimaModificacion().format(formato));
+        System.out.println("Usuario modificador: " + cuenta.obtenerUsuarioModificacion());
+        
         // ===================================================================
         //  Calcular e imprimir la nómina total del banco
         // ===================================================================
@@ -254,6 +368,8 @@ public class SistemaBancarioDemo {
                                          ESCENARIO 12
                            =======================================""");
         
+        double nominaTotal = banco.calcularNominaTotal();
+        System.out.println("Nomina total del banco: $" + nominaTotal);
         
     }
 }

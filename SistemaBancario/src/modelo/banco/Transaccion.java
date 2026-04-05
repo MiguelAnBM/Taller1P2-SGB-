@@ -2,12 +2,16 @@ package modelo.banco;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import modelo.abstractas.Cuenta;
 import modelo.enums.EstadoTransaccion;
 import modelo.excepciones.DatoInvalidoException;
+import modelo.excepciones.EstadoTransaccionInvalidoException;
 
 public class Transaccion {
+    // Para formatear las fechas y horas
+    public static final DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     
     // ── ATRIBUTOS ───────────────────────────────────────────────────────
     private String id;
@@ -27,6 +31,7 @@ public class Transaccion {
         setMonto(monto);
         setDescripcion(descripcion);
         this.fecha = LocalDateTime.now();
+        this.estado = estado;
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────
@@ -59,7 +64,7 @@ public class Transaccion {
     }
 
     public void setMonto(double monto) {
-        if (monto < 0) {
+        if (monto <= 0) {
             throw new DatoInvalidoException("Monto", monto);
         }
         this.monto = monto;
@@ -73,21 +78,47 @@ public class Transaccion {
     }
 
     // ── MÉTODOS ───────────────────────────────────────────────────────
-    void cambiarEstado(EstadoTransaccion estado) {
-        // FALTA CÓDIGO
+    public void cambiarEstado(EstadoTransaccion nuevo) {
+        switch (getEstado()) {
+            case PENDIENTE -> {
+                if (nuevo == EstadoTransaccion.PROCESANDO || nuevo == EstadoTransaccion.RECHAZADA) {
+                    this.estado = nuevo;
+                    return;
+                } else {
+                    throw new EstadoTransaccionInvalidoException(getEstado().toString(), nuevo.toString());
+                }
+            }
+            case PROCESANDO -> {
+                if (nuevo == EstadoTransaccion.COMPLETADA || nuevo == EstadoTransaccion.RECHAZADA) {
+                    this.estado = nuevo;
+                    return;
+                } else {
+                    throw new EstadoTransaccionInvalidoException(getEstado().toString(), nuevo.toString());
+                }
+            } 
+            case COMPLETADA -> {
+                if (nuevo == EstadoTransaccion.REVERTIDA) {
+                    this.estado = nuevo;
+                    return;
+                } else {
+                     throw new EstadoTransaccionInvalidoException(getEstado().toString(), nuevo.toString());
+                }
+            }
+            case RECHAZADA, REVERTIDA -> throw new EstadoTransaccionInvalidoException(getEstado().toString(), nuevo.toString());
+        }
     }
 
     public String generarComprobante() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("--------------- COMPROBANTE ").append(" ---------------\n");
+        sb.append("------------- COMPROBANTE ").append("-------------\n");
         sb.append("ID             : ").append(getId()).append("\n");
-        sb.append("Cuenta Origen  : ").append(getCuentaOrigen()).append("\n");
-        sb.append("Cuenta Destino : ").append(getCuentaDestino()).append("\n");
-        sb.append("Fecha          : ").append(getFecha()).append("\n");
+        sb.append("Cuenta Origen  : ").append(getCuentaOrigen().getNumeroCuenta()).append("\n");
+        sb.append("Cuenta Destino : ").append(getCuentaDestino().getNumeroCuenta()).append("\n");
+        sb.append("Fecha          : ").append(getFecha().format(formato)).append("\n");
         sb.append("Monto          : ").append(getMonto()).append("\n");
         sb.append("Descripcion    : ").append(getDescripcion()).append("\n");
-        sb.append("-------------------------------------------\n");
+        sb.append("---------------------------------------");
 
         return sb.toString();
     }

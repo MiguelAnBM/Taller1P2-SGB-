@@ -54,7 +54,11 @@ public abstract class Empleado extends Persona{
     }
     
     public void setActivo(boolean activo){
-        this.activo = activo;
+        if (activo || !activo) {
+            this.activo = activo;
+        } else {
+            throw new DatoInvalidoException("Activar", activo);
+        }
     }
     
     // ── MÉTODOS CONCRETOS ───────────────────────────────────────────────────────

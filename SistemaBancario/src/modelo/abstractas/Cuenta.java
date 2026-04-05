@@ -26,9 +26,9 @@ public abstract class Cuenta implements Transaccionable, Consultable, Auditable{
     public Cuenta(String numeroCuenta, double saldo, String usuarioModificacion) {
         setNumeroCuenta(numeroCuenta);
         setSaldo(saldo);
+        setUsuarioModificacion(usuarioModificacion);
         this.fechaCreacion = LocalDateTime.now();
         this.ultimaModificacion = LocalDateTime.now();
-        this.usuarioModificacion = "Sistema"; // Por defecto el sistema crea la cuenta
         this.bloqueada = false; // Por defecto no está bloqueada
         this.historial = new Transaccion [20]; // Max 20 
         this.totalTransacciones = 0; // Inicia en 0
@@ -59,7 +59,22 @@ public abstract class Cuenta implements Transaccionable, Consultable, Auditable{
     }
 
     public void setBloqueada(boolean bloqueada) {
-        this.bloqueada = bloqueada;
+        if (bloqueada || !bloqueada) {
+            this.bloqueada = bloqueada;
+        } else {
+            throw new DatoInvalidoException("Bloquear", bloqueada);
+        }
+    }
+    
+    public void setUsuarioModificacion(String usuario) {
+        if (usuario == null || usuario.isBlank()) {
+            throw new DatoInvalidoException("Usuario", "Vacio");
+        }
+        setUltimaModificacion();
+    }
+    
+    public void setUltimaModificacion(){
+        this.ultimaModificacion = LocalDateTime.now();
     }
 
     // ── MÉTODOS CONCRETOS ───────────────────────────────────────────────────────

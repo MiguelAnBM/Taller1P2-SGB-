@@ -37,6 +37,9 @@ public class Cajero extends Empleado{
     
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setTurno(Turno turno) {
+        if (turno == null) {
+            throw new DatoInvalidoException("Turno", "Vacio");
+        }
         this.turno = turno;
     }
     

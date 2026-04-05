@@ -63,11 +63,11 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
     @Override
     public String obtenerResumen() {
         return "CUENTA DE AHORROS ---------------------" + "\n"
-             + "Numero de cuenta: " + getNumeroCuenta() + "\n"
-             + "Saldo: " + getSaldo() + "\n"
-             + "Tasa de interes: "+ getTasaInteres() + "\n"
-             + "Retiros realizados este mes: " + getRetirosMesActual() + "\n"
-             + "Maximo de retiros posibles: " + getMaxRetirosMes(); 
+             + "Numero de cuenta : " + getNumeroCuenta() + "\n"
+             + "Saldo : " + getSaldo() + "\n"
+             + "Tasa de interes  : "+ getTasaInteres() + "\n"
+             + "Retiros realizados este mes : " + getRetirosMesActual() + "\n"
+             + "Maximo de retiros posibles  : " + getMaxRetirosMes(); 
     }
 
     @Override
@@ -77,7 +77,8 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public String obtenerTipo() {
-        return "Cuenta de ahorros";}
+        return "Cuenta de ahorros";
+    }
 
     //MÉTODOS DE TRANSACCIONABLE
     @Override

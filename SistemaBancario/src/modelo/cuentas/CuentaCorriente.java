@@ -68,8 +68,8 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     public String obtenerResumen() {
     return "CUENTA CORRIENTE ----------------------" + "\n"
          + "Numero de cuenta : " + getNumeroCuenta() + "\n"
-         + "Saldo: $" + getSaldo() + "\n"
-         + "Monto sobregiro: $" + getMontoSobregiro();}
+         + "Saldo : $" + getSaldo() + "\n"
+         + "Monto sobregiro  : $" + getMontoSobregiro();}
 
     @Override
     public boolean estaActivo() {

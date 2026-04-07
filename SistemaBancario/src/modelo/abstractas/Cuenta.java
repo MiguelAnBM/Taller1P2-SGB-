@@ -28,7 +28,7 @@ public abstract class Cuenta implements Transaccionable, Consultable, Auditable{
         setSaldo(saldo);
         setUsuarioModificacion(usuarioModificacion);
         this.fechaCreacion = LocalDateTime.now();
-        this.ultimaModificacion = LocalDateTime.now();
+        setUltimaModificacion();
         this.bloqueada = false; // Por defecto no está bloqueada
         this.historial = new Transaccion [20]; // Max 20 
         this.totalTransacciones = 0; // Inicia en 0
@@ -66,11 +66,12 @@ public abstract class Cuenta implements Transaccionable, Consultable, Auditable{
         }
     }
     
-    public void setUsuarioModificacion(String usuario) {
+    protected void setUsuarioModificacion(String usuario) {
         if (usuario == null || usuario.isBlank()) {
-            throw new DatoInvalidoException("Usuario", "Vacio");
+            throw new DatoInvalidoException("Usuario Modificacion", "Vacio");
         }
-        setUltimaModificacion();
+        this.usuarioModificacion = usuario;
+        this.ultimaModificacion  = LocalDateTime.now();
     }
     
     public void setUltimaModificacion(){

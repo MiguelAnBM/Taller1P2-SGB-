@@ -128,10 +128,14 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     public String obtenerUsuarioModificacion() {
         return getUsuarioModificacion();
     }
-
+//--------------------------
     @Override
     public void registrarModificacion(String usuario) {
-        //FALTA CÓDIGO
+        if (usuario == null || usuario.isBlank()) {
+            throw new DatoInvalidoException("Usuario", "Vacio");
+        }
+        setUsuarioModificacion(usuario);
+        setUltimaModificacion();
     }
 
 }

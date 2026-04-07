@@ -34,14 +34,23 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setLimiteCredito(double limiteCredito) {
+        if (limiteCredito<=0) {
+        throw new DatoInvalidoException("limite credito", limiteCredito);    
+        }
         this.limiteCredito = limiteCredito;
     }
 
     public void setTasaInteres(double tasaInteres) {
+        if (tasaInteres<0) {
+            throw new DatoInvalidoException("Tasa de interes", tasaInteres);
+            }
         this.tasaInteres = tasaInteres;
     }
 
     public void setDeudaActual(double deudaActual) {
+        if (deudaActual<0) {
+            throw new DatoInvalidoException("Deuda actual", deudaActual);
+                }
         this.deudaActual = deudaActual;
     }
 
@@ -62,6 +71,8 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     }
 
     // ── MÉTODOS DE INTERFACES ───────────────────────────────────────────────────────
+    
+    //MÉTODOS DE CONSULTABLE
     @Override
     public String obtenerResumen() {
         return "CUENTA CREDITO ------------------------" + "\n"
@@ -82,6 +93,7 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
         return "Cuenta de credito"; 
     }
 
+    //MÉTODOS DE TRANSACCIONABLE
     @Override
     public void depositar(double monto) throws CuentaBloqueadaException{
         verificarBloqueada();
@@ -105,8 +117,8 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public double calcularComision(double monto) {
-       //FALTA CÓDIGO
-       return 0;
+       //Comisión por operación 
+       return monto * 0.02;
     }
 
     @Override
@@ -114,6 +126,8 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
         return deudaActual; 
     }
 
+    
+    //MÉTODOS DE AUDITABLE
     @Override
     public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion(); 
@@ -131,7 +145,11 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public void registrarModificacion(String usuario) {
-        //FALTA CÓDIGO 
+        if (usuario == null || usuario.isBlank()) {
+            throw new DatoInvalidoException("Usuario", "Vacio");
+        }
+        setUsuarioModificacion(usuario);
+        setUltimaModificacion();
     }
 
     

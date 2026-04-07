@@ -33,10 +33,16 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     // ── SETTERS ───────────────────────────────────────────────────────
     public void setTasaInteres(double tasaInteres) {
+        if (tasaInteres<0) {
+            throw new DatoInvalidoException("Tasa de interes", tasaInteres); 
+        }
         this.tasaInteres = tasaInteres;
     }
 
     public void setMaxRetirosmes(int maxRetirosMes) {
+        if (maxRetirosMes<0) {
+            throw new DatoInvalidoException("Maximo de retiros mensuales", maxRetirosMes);
+            }
         this.maxRetirosMes = maxRetirosMes;
     }
 
@@ -104,8 +110,12 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public double calcularComision(double monto) {
-        //FALTA CÓDIGO
-        throw new UnsupportedOperationException("Not supported yet.");
+        /*Las cuentas de ahorros generalmente no cobran comisión si se mantiene 
+        dentro de un número de retiros, y se cobran si excede el límite*/
+        if (retirosMesActual>maxRetirosMes) {
+            return monto * 0.02; 
+        }
+        return 0;
     }
 
     @Override
@@ -131,7 +141,11 @@ public class CuentaAhorros extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public void registrarModificacion(String usuario) {
-       //Proximo a editar 
+       if (usuario == null || usuario.isBlank()) {
+            throw new DatoInvalidoException("Usuario", "Vacio");
+        }
+        setUsuarioModificacion(usuario);
+        setUltimaModificacion();
     }
 
 }

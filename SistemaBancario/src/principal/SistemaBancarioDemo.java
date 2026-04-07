@@ -24,9 +24,6 @@ import modelo.excepciones.CuentaBloqueadaException;
 import modelo.excepciones.EstadoTransaccionInvalidoException;
 import modelo.excepciones.PermisoInsuficienteException;
 import modelo.excepciones.SaldoInsuficienteException;
-import modelo.interfaces.Consultable;
-import modelo.interfaces.Notificable;
-import modelo.interfaces.Transaccionable;
 import modelo.personas.ClienteEmpresarial;
 import modelo.personas.ClienteNatural;
 
@@ -65,9 +62,8 @@ public class SistemaBancarioDemo {
         } catch (CapacidadExcedidaException e) {
             System.out.println(e.getMessage());
         }
-        
-        ClienteEmpresarial clienteE1 = new ClienteEmpresarial("CE-001", "Belany", "Mendoza", LocalDate.parse("2006-05-15"), 
-                                                       "belanym@gmail.com", "123456", "Inversiones Mendoza S.A.S.", "Mario");
+        ClienteEmpresarial clienteE1= new ClienteEmpresarial("CE-001", "Belany", "Mendoza", LocalDate.parse("2006-05-15"), 
+                "belanym@gmail.com", "123456", "Inversiones Mendoza S.A.S.", "Mario");
         try {
             banco.registrarCliente(clienteE1);
         } catch (CapacidadExcedidaException e) {

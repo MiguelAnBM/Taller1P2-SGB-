@@ -1,9 +1,9 @@
 # Taller1P2
 Evaluación de conocimientos hasta el corte 2
 > **Integrantes:**
-> Benitez Moncaleano Miguel Angel
-> Mendoza Castillo Delany Yulieth
-> Ramirez Benitez Jady Luz 
+> Benitez Moncaleano Miguel Angel,
+> Mendoza Castillo Delany Yulieth,
+> Ramirez Benitez Jady Luz, 
 > Sanchez Villareal Carlos Arturo 
 # 🏦 Sistema de Gestión Bancaria (SGB)
 
